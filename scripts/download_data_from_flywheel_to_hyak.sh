@@ -560,6 +560,14 @@ echo "download successfully"
 
 CONTAINER_SCRIPT
 
+if [[ "${LIST_ONLY}" == "1" ]]; then
+    host_manifest="${HOST_OUTPUT_DIR%/}/$(basename "${MANIFEST}")"
+    [[ -f "${host_manifest}" ]] || { echo "Error: manifest was not created: ${host_manifest}" >&2; exit 1; }
+    echo "Uploading manifest only to Kopah: ${KOPAH_URI}"
+    s3cmd --config="${S3CFG}" put "${host_manifest}" "${KOPAH_URI%/}/$(basename "${MANIFEST}")"
+    exit 0
+fi
+
 echo "Uploading staged DICOM and manifest to Kopah: ${KOPAH_URI}"
 s3cmd --config="${S3CFG}" sync "${HOST_OUTPUT_DIR%/}/" "${KOPAH_URI%/}/"
 
