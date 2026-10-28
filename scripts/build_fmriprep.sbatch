@@ -5,8 +5,6 @@
 #SBATCH --cpus-per-task=2
 #SBATCH --mem=16G
 #SBATCH --time=02:00:00
-#SBATCH --output=/gscratch/scrubbed/fanglab/xiaoqian/IFOCUS/logs/build/fmriprep_%j.out
-#SBATCH --error=/gscratch/scrubbed/fanglab/xiaoqian/IFOCUS/logs/build/fmriprep_%j.err
 
 set -euo pipefail
 

@@ -29,7 +29,7 @@ source "$CONFIG_ENV"
 
 HCP_STRUCTURAL_OUT="${HCP_STRUCTURAL_OUT:-${DERIVATIVES_DIR}/hcp}"
 HCP_FUNCTIONAL_WORK="${HCP_FUNCTIONAL_WORK:-${WORK_ROOT:-${SCRUBBED_PROJECT_DIR}/scratch}/hcp-functional}"
-mkdir -p "${LOG_ROOT:-/gscratch/scrubbed/fanglab/xiaoqian/IFOCUS/logs}/slurm/hcp-functional" "$LOG_DIR" "$HCP_FUNCTIONAL_WORK"
+mkdir -p "${LOG_ROOT:?ERROR: LOG_ROOT must be set in the config}/slurm/hcp-functional" "$LOG_DIR" "$HCP_FUNCTIONAL_WORK"
 
 if [[ ! -d "$BIDS_DIR" ]]; then
   echo "ERROR: BIDS_DIR does not exist: $BIDS_DIR" >&2
@@ -67,6 +67,8 @@ sbatch \
   --array="0-${last_index}" \
   --partition="${HYAK_PARTITION:?ERROR: HYAK_PARTITION must be set in the config}" \
   --time="${HCP_FUNCTIONAL_HYAK_TIME:-48:00:00}" \
+  --output="${LOG_ROOT}/slurm/hcp-functional/hcp_functional_%A_%a.out" \
+  --error="${LOG_ROOT}/slurm/hcp-functional/hcp_functional_%A_%a.err" \
   "${REPO_DIR}/scripts/submit_hcp_functional_hyak.sbatch" \
   "$CONFIG_ENV" \
   "$subject_list"

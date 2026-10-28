@@ -5,8 +5,6 @@
 #SBATCH --cpus-per-task=2
 #SBATCH --mem=8G
 #SBATCH --time=01:00:00
-#SBATCH --output=/gscratch/scrubbed/fanglab/xiaoqian/IFOCUS/logs/build/flywheel_%j.out
-#SBATCH --error=/gscratch/scrubbed/fanglab/xiaoqian/IFOCUS/logs/build/flywheel_%j.err
 
 set -euo pipefail
 

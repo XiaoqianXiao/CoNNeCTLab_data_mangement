@@ -23,7 +23,7 @@ HIPPUNFOLD_INJECT_TEMPLATE="${HIPPUNFOLD_INJECT_TEMPLATE:-upenn}"
 HIPPUNFOLD_BUILTIN_ATLAS="${HIPPUNFOLD_BUILTIN_ATLAS:-multihist7}"
 HIPPUNFOLD_REQUIRE_CACHED_MODEL="${HIPPUNFOLD_REQUIRE_CACHED_MODEL:-1}"
 HIPPUNFOLD_REQUIRE_CACHED_RESOURCES="${HIPPUNFOLD_REQUIRE_CACHED_RESOURCES:-1}"
-mkdir -p "${LOG_ROOT:-/gscratch/scrubbed/fanglab/xiaoqian/IFOCUS/logs}/slurm/hippunfold" "$LOG_DIR" "$HIPPUNFOLD_OUT" "${HIPPUNFOLD_CACHE_DIR}/model"
+mkdir -p "${LOG_ROOT:?ERROR: LOG_ROOT must be set in the config}/slurm/hippunfold" "$LOG_DIR" "$HIPPUNFOLD_OUT" "${HIPPUNFOLD_CACHE_DIR}/model"
 
 hippunfold_model_file() {
   case "$1" in
@@ -118,6 +118,8 @@ sbatch \
   --array="0-${last_index}" \
   --partition="${HYAK_PARTITION:?ERROR: HYAK_PARTITION must be set in the config}" \
   --time="${HIPPUNFOLD_HYAK_TIME:-${HYAK_TIME:-48:00:00}}" \
+  --output="${LOG_ROOT}/slurm/hippunfold/hippunfold_%A_%a.out" \
+  --error="${LOG_ROOT}/slurm/hippunfold/hippunfold_%A_%a.err" \
   "${REPO_DIR}/scripts/submit_hippunfold_hyak.sbatch" \
   "$CONFIG_ENV" \
   "$subject_list"

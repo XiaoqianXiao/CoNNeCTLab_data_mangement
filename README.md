@@ -77,11 +77,11 @@ export FW_KEY='uw-chn.flywheel.io:YOUR_API_KEY'
 
 # Generate the session manifest only; review it before downloading.
 scripts/download_data_from_flywheel_to_hyak.sh \
-  --config config/CoNNeCTLab_data_management.env --list-only 1
+  --config config/CoNNeCTLab_data_management.env --sub-id 105 --list-only 1
 
 # Download the selected DICOM sessions to Hyak.
 scripts/download_data_from_flywheel_to_hyak.sh \
-  --config config/CoNNeCTLab_data_management.env --list-only 0
+  --config config/CoNNeCTLab_data_management.env --sub-id 105 --list-only 0
 
 # Unpack the downloaded DICOM archives before conversion.
 scripts/un_zip.sh

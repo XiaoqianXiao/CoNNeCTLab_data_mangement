@@ -7,8 +7,6 @@
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=64G
 #SBATCH --time=72:00:00
-#SBATCH --output=/gscratch/scrubbed/fanglab/xiaoqian/IFOCUS/logs/slurm/hcp-structural/hcp_structural_%A_%a.out
-#SBATCH --error=/gscratch/scrubbed/fanglab/xiaoqian/IFOCUS/logs/slurm/hcp-structural/hcp_structural_%A_%a.err
 
 set -euo pipefail
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}"

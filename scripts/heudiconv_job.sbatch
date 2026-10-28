@@ -7,18 +7,23 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=12G
 #SBATCH --time=04:00:00
-#SBATCH --output=/gscratch/scrubbed/fanglab/xiaoqian/IFOCUS/logs/heudiconv/%x_%A_%a.out
-#SBATCH --error=/gscratch/scrubbed/fanglab/xiaoqian/IFOCUS/logs/heudiconv/%x_%A_%a.err
 
 set -euo pipefail
 
 # --- Configuration ---
 HEUDICONV_SIF=/gscratch/fang/resources/images/heudiconv.sif
 HEURISTIC=/gscratch/scrubbed/fanglab/xiaoqian/repo/R01/scripts/heuristic_reproin_like.py
-B0_LINKER=/gscratch/scrubbed/fanglab/xiaoqian/repo/R01/scripts/link_bold_to_fieldmaps.py
+CONFIG_ENV="${1:?Usage: heudiconv_job.sbatch CONFIG_ENV}"
+if [[ "$CONFIG_ENV" != /* ]]; then
+  CONFIG_ENV="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/${CONFIG_ENV}"
+fi
+# shellcheck source=/dev/null
+source "$CONFIG_ENV"
 
-DICOM_ROOT=/gscratch/scrubbed/fanglab/xiaoqian/IFOCUS/sourcedata/dicom
-BIDS_ROOT=/gscratch/scrubbed/fanglab/xiaoqian/IFOCUS/sourcedata/nii
+B0_LINKER="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/link_bold_to_fieldmaps.py"
+
+DICOM_ROOT="${SCRUBBED_PROJECT_DIR:?ERROR: SCRUBBED_PROJECT_DIR must be set in the config}/sourcedata/dicom"
+BIDS_ROOT="${SCRUBBED_PROJECT_DIR}/sourcedata/nii"
 
 module load apptainer 2>/dev/null || true
 

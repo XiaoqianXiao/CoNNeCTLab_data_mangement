@@ -30,12 +30,12 @@ Usage: download_data_from_flywheel_to_hyak.sh [OPTIONS]
   --jobs COUNT                Concurrent downloads (default: 1).
   --manifest PATH             Manifest path (default: destination-derived path).
   --output-dir PATH           Hyak directory for downloaded data and manifests.
-  --kopah-uri S3_URI          Kopah destination (default: s3://fang/IFOCUS/sourcedata/dicom).
+  --kopah-uri S3_URI          Kopah destination (default: KOPAH_SOURCE_DICOM_URI from config).
   --s3cfg PATH                s3cmd config containing Kopah credentials.
   --keep-local 0|1            Retain local downloaded data after a successful upload (default: 1).
   --container-output-dir PATH Mount point for --output-dir (default: /DATA_DIR).
   --image PATH                Apptainer image path.
-  --project-path PATH         Flywheel project path (default: fang-lab/IFOCUS).
+  --project-path PATH         Flywheel project path (default: fang-lab/PROJECT_NAME from config).
   --fw-host HOST              Flywheel host for a token-only FW_KEY.
   -h, --help                  Show this help.
 
@@ -50,12 +50,12 @@ USAGE
 
 set_defaults() {
     IMAGE="/gscratch/fang/resources/images/flywheel.sif"
-    HOST_OUTPUT_DIR="/gscratch/scrubbed/fanglab/xiaoqian/IFOCUS/sourcedata/dicom"
-    KOPAH_URI="s3://fang/IFOCUS/sourcedata/dicom"
-    S3CFG="/mmfs1/home/xxqian/.s3cfg"
+    HOST_OUTPUT_DIR=""
+    KOPAH_URI=""
+    S3CFG=""
     KEEP_LOCAL="1"
     CONTAINER_OUTPUT_DIR="/DATA_DIR"
-    PROJECT_PATH="fang-lab/IFOCUS"
+    PROJECT_PATH=""
     FW_HOST=""
     START_DATE=""
     LIST_ONLY="1"
@@ -207,6 +207,10 @@ if [[ -n "${CONFIG_ENV}" ]]; then
     # shellcheck source=/dev/null
     source "${CONFIG_ENV}"
 fi
+HOST_OUTPUT_DIR="${HOST_OUTPUT_DIR:-${SCRUBBED_PROJECT_DIR:?ERROR: SCRUBBED_PROJECT_DIR must be set in the config}/sourcedata/dicom}"
+KOPAH_URI="${KOPAH_URI:-${KOPAH_SOURCE_DICOM_URI:?ERROR: KOPAH_SOURCE_DICOM_URI must be set in the config}}"
+S3CFG="${S3CFG:-${KOPAH_S3CFG:?ERROR: KOPAH_S3CFG must be set in the config}}"
+PROJECT_PATH="${PROJECT_PATH:-fang-lab/${PROJECT_NAME:?ERROR: PROJECT_NAME must be set in the config}}"
 resolve_release_sessions
 
 if [[ -z "${MANIFEST}" ]]; then

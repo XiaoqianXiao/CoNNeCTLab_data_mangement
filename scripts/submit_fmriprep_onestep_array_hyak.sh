@@ -40,7 +40,7 @@ for required in BIDS_DIR FMRIPREP_OUT FS_SUBJECTS_DIR WORK_DIR LOG_DIR FS_LICENS
   [[ -n "${!required:-}" ]] || { echo "ERROR: $required is not set in $config_env" >&2; exit 2; }
 done
 
-mkdir -p "$LOG_DIR"
+mkdir -p "$LOG_DIR" "${LOG_ROOT:?ERROR: LOG_ROOT must be set in the config}/slurm/fmriprep"
 [[ -d "$BIDS_DIR" ]] || { echo "ERROR: BIDS_DIR does not exist: $BIDS_DIR" >&2; exit 2; }
 
 if [[ -z "${TEMPLATEFLOW_HOME:-}" ]]; then
@@ -95,4 +95,6 @@ sbatch \
   --cpus-per-task="$FMRIPREP_ONESTEP_CPUS" \
   --mem="${FMRIPREP_ONESTEP_MEM_MB}M" \
   --array="$array_spec" \
+  --output="${LOG_ROOT}/slurm/fmriprep/fmriprep_%A_%a.out" \
+  --error="${LOG_ROOT}/slurm/fmriprep/fmriprep_%A_%a.err" \
   "$repo_dir/scripts/submit_fmriprep_hyak.sbatch" "$config_env" "$subject_list"

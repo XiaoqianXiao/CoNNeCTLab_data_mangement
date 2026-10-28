@@ -28,7 +28,7 @@ source "$CONFIG_ENV"
 
 HCP_STRUCTURAL_OUT="${HCP_STRUCTURAL_OUT:-${DERIVATIVES_DIR}/hcp}"
 HCP_STRUCTURAL_WORK="${HCP_STRUCTURAL_WORK:-${WORK_ROOT:-${SCRUBBED_PROJECT_DIR}/scratch}/hcp-structural}"
-mkdir -p "${LOG_ROOT:-/gscratch/scrubbed/fanglab/xiaoqian/IFOCUS/logs}/slurm/hcp-structural" "$LOG_DIR" "$HCP_STRUCTURAL_OUT" "$HCP_STRUCTURAL_WORK"
+mkdir -p "${LOG_ROOT:?ERROR: LOG_ROOT must be set in the config}/slurm/hcp-structural" "$LOG_DIR" "$HCP_STRUCTURAL_OUT" "$HCP_STRUCTURAL_WORK"
 
 if [[ ! -d "$BIDS_DIR" ]]; then
   echo "ERROR: BIDS_DIR does not exist: $BIDS_DIR" >&2
@@ -54,6 +54,8 @@ sbatch \
   --array="0-${last_index}" \
   --partition="${HYAK_PARTITION:?ERROR: HYAK_PARTITION must be set in the config}" \
   --time="${HCP_STRUCTURAL_HYAK_TIME:-72:00:00}" \
+  --output="${LOG_ROOT}/slurm/hcp-structural/hcp_structural_%A_%a.out" \
+  --error="${LOG_ROOT}/slurm/hcp-structural/hcp_structural_%A_%a.err" \
   "${REPO_DIR}/scripts/submit_hcp_structural_hyak.sbatch" \
   "$CONFIG_ENV" \
   "$subject_list"

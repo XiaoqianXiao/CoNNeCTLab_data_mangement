@@ -5,8 +5,6 @@
 #SBATCH --cpus-per-task=2
 #SBATCH --mem=32G
 #SBATCH --time=04:00:00
-#SBATCH --output=/gscratch/scrubbed/fanglab/xiaoqian/IFOCUS/logs/build/hippunfold_%j.out
-#SBATCH --error=/gscratch/scrubbed/fanglab/xiaoqian/IFOCUS/logs/build/hippunfold_%j.err
 
 set -euo pipefail
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}"

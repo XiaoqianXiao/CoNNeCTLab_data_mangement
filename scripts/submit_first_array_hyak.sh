@@ -15,7 +15,7 @@ fi
 
 # shellcheck source=/dev/null
 source "$CONFIG_ENV"
-mkdir -p "${LOG_ROOT:-/gscratch/scrubbed/fanglab/xiaoqian/IFOCUS/logs}/slurm/first" "$LOG_DIR"
+mkdir -p "${LOG_ROOT:?ERROR: LOG_ROOT must be set in the config}/slurm/first" "$LOG_DIR"
 
 timestamp="$(date +%Y%m%d_%H%M%S)"
 subject_list="${LOG_DIR}/first_subjects_${timestamp}.txt"
@@ -53,6 +53,8 @@ sbatch \
   --array="0-${last_index}" \
   --partition="${HYAK_PARTITION:?ERROR: HYAK_PARTITION must be set in the config}" \
   --time="${FIRST_HYAK_TIME:-12:00:00}" \
+  --output="${LOG_ROOT}/slurm/first/first_%A_%a.out" \
+  --error="${LOG_ROOT}/slurm/first/first_%A_%a.err" \
   "${REPO_DIR}/scripts/submit_first_hyak.sbatch" \
   "$CONFIG_ENV" \
   "$subject_list"
